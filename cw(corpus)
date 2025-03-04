@@ -1,0 +1,102 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "provenance": [],
+      "authorship_tag": "ABX9TyODY/bZ8b2M5ILNiwjofd2K",
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/HARSHA-GV/HARSHA-GV/blob/main/cw(corpus)\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 2,
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "u0C1KDLkhehC",
+        "outputId": "c40c9568-02fe-45af-bfb0-3717152a0cb7"
+      },
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Analysis for word 'patient':\n",
+            "the 0.2704925239086151\n",
+            "treat 0.2675759792327881\n",
+            "mellitus 0.20430023968219757\n",
+            "The 0.19626495242118835\n",
+            "Symptoms 0.19223204255104065\n",
+            "\n",
+            "Analysis for word 'court':\n",
+            "a 0.2577084004878998\n",
+            "defendant 0.23732653260231018\n",
+            "reviewing 0.16933836042881012\n",
+            "was 0.16483156383037567\n",
+            "contract 0.16124068200588226\n"
+          ]
+        }
+      ],
+      "source": [
+        "from gensim.models import Word2Vec  # Corrected the import statement\n",
+        "\n",
+        "# Custom Word2Vec model\n",
+        "def cw(corpus):\n",
+        "    model = Word2Vec(\n",
+        "        sentences=corpus,\n",
+        "        vector_size=50,  # Dimensionality of word vectors\n",
+        "        window=5,        # Context window size\n",
+        "        min_count=1,     # Minimum frequency for a word to be considered\n",
+        "        workers=4,       # Number of worker threads\n",
+        "        epochs=10,       # Number of training epochs\n",
+        "    )\n",
+        "    return model\n",
+        "\n",
+        "# Analyze trained embeddings\n",
+        "def anal(model, word):\n",
+        "    sw = model.wv.most_similar(word, topn=5)\n",
+        "    for w, s in sw:\n",
+        "        print(w, s)\n",
+        "\n",
+        "# Example domain-specific dataset (medical/legal/etc.)\n",
+        "corpus = [\n",
+        "    \"The patient was prescribed antibiotics to treat the infection.\".split(),\n",
+        "    \"The court ruled in favor of the defendant after reviewing the evidence.\".split(),\n",
+        "    \"Diagnosis of diabetes mellitus requires specific blood tests.\".split(),\n",
+        "    \"The legal contract must be signed in the presence of a witness.\".split(),\n",
+        "    \"Symptoms of the disease include fever, cough, and fatigue.\".split(),\n",
+        "]\n",
+        "\n",
+        "# Train the Word2Vec model\n",
+        "model = cw(corpus)\n",
+        "\n",
+        "# Analyze specific words\n",
+        "print(\"Analysis for word 'patient':\")\n",
+        "anal(model, \"patient\")\n",
+        "\n",
+        "print(\"\\nAnalysis for word 'court':\")\n",
+        "anal(model, \"court\")"
+      ]
+    }
+  ]
+}
